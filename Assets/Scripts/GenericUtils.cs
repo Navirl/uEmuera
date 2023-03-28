@@ -1,10 +1,9 @@
-﻿using UnityEngine;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
+using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 public static class GenericUtils
 {
@@ -26,14 +25,14 @@ public static class GenericUtils
     public static Component FindChildByName(System.Type type, GameObject obj,
                                             string childname, bool includeInactive = false)
     {
-        if(!obj)
+        if (!obj)
             return null;
         var list = obj.GetComponentsInChildren(type, includeInactive);
         var length = list.Length;
-        for(int i=0; i<length; ++i)
+        for (int i = 0; i < length; ++i)
         {
             var v = list[i];
-            if(v.name.CompareTo(childname) == 0)
+            if (v.name.CompareTo(childname) == 0)
                 return v;
         }
         return null;
@@ -45,16 +44,16 @@ public static class GenericUtils
         where T : Component
     {
         var result_list = new List<T>();
-        if(!obj)
+        if (!obj)
             return result_list;
 
         var list = obj.GetComponentsInChildren<Transform>(includeInactive);
         var length = list.Length;
-        for(int i = 0; i < length; ++i)
+        for (int i = 0; i < length; ++i)
         {
             var v = list[i];
             var c = v.GetComponent<T>();
-            if(c)
+            if (c)
                 result_list.Add(c);
         }
 
@@ -65,14 +64,14 @@ public static class GenericUtils
     /// </summary>
     public static T FindChildByName<T>(GameObject obj, string childname, bool includeInactive = false) where T : Component
     {
-        if(!obj)
+        if (!obj)
             return null;
         var list = obj.GetComponentsInChildren<T>(includeInactive);
         var length = list.Length;
-        for(int i = 0; i < length; ++i)
+        for (int i = 0; i < length; ++i)
         {
             var v = list[i];
-            if(v.name.CompareTo(childname) == 0)
+            if (v.name.CompareTo(childname) == 0)
                 return v;
         }
         return null;
@@ -82,14 +81,14 @@ public static class GenericUtils
     /// </summary>
     public static GameObject FindChildByName(GameObject obj, string childname, bool includeInactive = false)
     {
-        if(!obj)
+        if (!obj)
             return null;
         var list = obj.GetComponentsInChildren<Transform>(includeInactive);
         var length = list.Length;
-        for(int i = 0; i < length; ++i)
+        for (int i = 0; i < length; ++i)
         {
             var v = list[i];
-            if(v.name.CompareTo(childname) == 0)
+            if (v.name.CompareTo(childname) == 0)
                 return v.gameObject;
         }
         return null;
@@ -101,33 +100,33 @@ public static class GenericUtils
         var objs = scene.GetRootGameObjects();
 
         Transform t = null;
-        for(int i = 0; i < objs.Length; ++i)
+        for (int i = 0; i < objs.Length; ++i)
         {
-            if(string.CompareOrdinal(objs[i].name, str[0]) == 0)
+            if (string.CompareOrdinal(objs[i].name, str[0]) == 0)
             {
                 t = objs[i].transform;
                 break;
             }
         }
-        if(t == null)
+        if (t == null)
             return null;
 
         Transform nt = null;
         int si = 1;
-        while(si < str.Length)
+        while (si < str.Length)
         {
             var n = str[si];
             var c = t.childCount;
-            for(int i = 0; i < c; ++i)
+            for (int i = 0; i < c; ++i)
             {
                 var o = t.GetChild(i);
-                if(string.CompareOrdinal(o.name, n) == 0)
+                if (string.CompareOrdinal(o.name, n) == 0)
                 {
                     nt = o;
                     break;
                 }
             }
-            if(nt == null)
+            if (nt == null)
                 return null;
             t = nt;
             nt = null;
@@ -144,7 +143,7 @@ public static class GenericUtils
     public static string GetFilename(string fullname)
     {
         int last_slash = fullname.LastIndexOf('/');
-        if(last_slash != -1)
+        if (last_slash != -1)
             return fullname.Substring(last_slash + 1);
         return fullname;
     }
@@ -170,10 +169,10 @@ public static class GenericUtils
         var x = rect.X;
         var y = height - rect.Height - rect.Y;
         var w = rect.Width;
-        if(x + w > width)
+        if (x + w > width)
             w = width - x;
         var h = rect.Height;
-        if(y + h > height)
+        if (y + h > height)
             h = height - y;
         return new Rect(x, y, w, h);
     }
@@ -184,12 +183,12 @@ public static class GenericUtils
         {
             var _callbacks1 = callbacks1;
             var iter = _callbacks1.GetEnumerator();
-            while(iter.MoveNext())
+            while (iter.MoveNext())
                 iter.Current();
 
             var _callbacks2 = callbacks2;
             var iter2 = _callbacks2.GetEnumerator();
-            while(iter2.MoveNext())
+            while (iter2.MoveNext())
                 iter2.Current(eventData);
         }
         void OnDestroy()
@@ -207,46 +206,46 @@ public static class GenericUtils
     /// <param name="callback">回调函数</param>
     public static void SetListenerOnClick(GameObject obj, Action callback)
     {
-        if(!obj || callback == null)
+        if (!obj || callback == null)
             return;
         var l = obj.GetComponent<PointerClickListener>();
-        if(!l)
+        if (!l)
             l = obj.AddComponent<PointerClickListener>();
         l.callbacks1.Add(callback);
     }
     public static void SetListenerOnClick(GameObject obj, Action<PointerEventData> callback)
     {
-        if(!obj || callback == null)
+        if (!obj || callback == null)
             return;
         var l = obj.GetComponent<PointerClickListener>();
-        if(!l)
+        if (!l)
             l = obj.AddComponent<PointerClickListener>();
         l.callbacks2.Add(callback);
     }
     public static void RemoveListenerOnClick(GameObject obj, Action callback)
     {
-        if(!obj || callback == null)
+        if (!obj || callback == null)
             return;
         var l = obj.GetComponent<PointerClickListener>();
-        if(!l)
+        if (!l)
             return;
         l.callbacks1.Remove(callback);
     }
     public static void RemoveListenerOnClick(GameObject obj, Action<PointerEventData> callback)
     {
-        if(!obj || callback == null)
+        if (!obj || callback == null)
             return;
         var l = obj.GetComponent<PointerClickListener>();
-        if(!l)
+        if (!l)
             return;
         l.callbacks2.Remove(callback);
     }
     public static void RemoveListenerOnClick(GameObject obj)
     {
-        if(!obj)
+        if (!obj)
             return;
         var l = obj.GetComponent<PointerClickListener>();
-        if(!l)
+        if (!l)
             return;
         l.callbacks1 = new HashSet<Action>();
         l.callbacks2 = new HashSet<Action<PointerEventData>>();
@@ -257,7 +256,7 @@ public static class GenericUtils
         public virtual void OnPointerDown(PointerEventData eventData)
         {
             var iter = callbacks.GetEnumerator();
-            while(iter.MoveNext())
+            while (iter.MoveNext())
                 iter.Current(eventData);
         }
         void OnDestroy()
@@ -268,28 +267,28 @@ public static class GenericUtils
     }
     public static void SetListenerOnPointerDown(GameObject obj, Action<PointerEventData> callback)
     {
-        if(!obj || callback == null)
+        if (!obj || callback == null)
             return;
         var l = obj.GetComponent<PointerDownListener>();
-        if(!l)
+        if (!l)
             l = obj.AddComponent<PointerDownListener>();
         l.callbacks.Add(callback);
     }
     public static void RemoveListenerOnPointerDown(GameObject obj, Action<PointerEventData> callback)
     {
-        if(!obj || callback == null)
+        if (!obj || callback == null)
             return;
         var l = obj.GetComponent<PointerDownListener>();
-        if(!l)
+        if (!l)
             return;
         l.callbacks.Remove(callback);
     }
     public static void RemoveListenerOnPointerDown(GameObject obj)
     {
-        if(!obj)
+        if (!obj)
             return;
         var l = obj.GetComponent<PointerDownListener>();
-        if(!l)
+        if (!l)
             return;
         l.callbacks.Clear();
     }
@@ -299,7 +298,7 @@ public static class GenericUtils
         public virtual void OnPointerUp(PointerEventData eventData)
         {
             var iter = callbacks.GetEnumerator();
-            while(iter.MoveNext())
+            while (iter.MoveNext())
                 iter.Current(eventData);
         }
         void OnDestroy()
@@ -310,28 +309,28 @@ public static class GenericUtils
     }
     public static void SetListenerOnPointerUp(GameObject obj, Action<PointerEventData> callback)
     {
-        if(!obj || callback == null)
+        if (!obj || callback == null)
             return;
         var l = obj.GetComponent<PointerUpListener>();
-        if(!l)
+        if (!l)
             l = obj.AddComponent<PointerUpListener>();
         l.callbacks.Add(callback);
     }
     public static void RemoveListenerOnPointerUp(GameObject obj, Action<PointerEventData> callback)
     {
-        if(!obj || callback == null)
+        if (!obj || callback == null)
             return;
         var l = obj.GetComponent<PointerUpListener>();
-        if(!l)
+        if (!l)
             return;
         l.callbacks.Remove(callback);
     }
     public static void RemoveListenerOnPointerUp(GameObject obj)
     {
-        if(!obj)
+        if (!obj)
             return;
         var l = obj.GetComponent<PointerUpListener>();
-        if(!l)
+        if (!l)
             return;
         l.callbacks.Clear();
     }
@@ -342,7 +341,7 @@ public static class GenericUtils
         public virtual void OnBeginDrag(PointerEventData eventData)
         {
             var iter = callbacks.GetEnumerator();
-            while(iter.MoveNext())
+            while (iter.MoveNext())
                 iter.Current(eventData);
         }
         void OnDestroy()
@@ -356,7 +355,7 @@ public static class GenericUtils
         public virtual void OnDrag(PointerEventData eventData)
         {
             var iter = callbacks.GetEnumerator();
-            while(iter.MoveNext())
+            while (iter.MoveNext())
                 iter.Current(eventData);
         }
         void OnDestroy()
@@ -370,7 +369,7 @@ public static class GenericUtils
         public virtual void OnEndDrag(PointerEventData eventData)
         {
             var iter = callbacks.GetEnumerator();
-            while(iter.MoveNext())
+            while (iter.MoveNext())
                 iter.Current(eventData);
         }
         void OnDestroy()
@@ -387,28 +386,28 @@ public static class GenericUtils
     /// <param name="callback">回调函数</param>
     public static void SetListenerOnDrag(GameObject obj, Action<PointerEventData> callback)
     {
-        if(!obj || callback == null)
+        if (!obj || callback == null)
             return;
         var l = obj.GetComponent<DragListener>();
-        if(!l)
+        if (!l)
             l = obj.AddComponent<DragListener>();
         l.callbacks.Add(callback);
     }
     public static void RemoveListenerOnDrag(GameObject obj, Action<PointerEventData> callback)
     {
-        if(!obj || callback == null)
+        if (!obj || callback == null)
             return;
         var l = obj.GetComponent<DragListener>();
-        if(!l)
+        if (!l)
             return;
         l.callbacks.Remove(callback);
     }
     public static void RemoveListenerOnDrag(GameObject obj)
     {
-        if(!obj)
+        if (!obj)
             return;
         var l = obj.GetComponent<DragListener>();
-        if(!l)
+        if (!l)
             return;
         l.callbacks.Clear();
     }
@@ -419,28 +418,28 @@ public static class GenericUtils
     /// <param name="callback">回调函数</param>
     public static void SetListenerOnBeginDrag(GameObject obj, Action<PointerEventData> callback)
     {
-        if(!obj || callback == null)
+        if (!obj || callback == null)
             return;
         var l = obj.GetComponent<BeginDragListener>();
-        if(!l)
+        if (!l)
             l = obj.AddComponent<BeginDragListener>();
         l.callbacks.Add(callback);
     }
     public static void RemoveListenerOnBeginDrag(GameObject obj, Action<PointerEventData> callback)
     {
-        if(!obj || callback == null)
+        if (!obj || callback == null)
             return;
         var l = obj.GetComponent<BeginDragListener>();
-        if(!l)
+        if (!l)
             return;
         l.callbacks.Remove(callback);
     }
     public static void RemoveListenerOnBeginDrag(GameObject obj)
     {
-        if(!obj)
+        if (!obj)
             return;
         var l = obj.GetComponent<BeginDragListener>();
-        if(!l)
+        if (!l)
             return;
         l.callbacks.Clear();
     }
@@ -451,28 +450,28 @@ public static class GenericUtils
     /// <param name="callback">回调函数</param>
     public static void SetListenerOnEndDrag(GameObject obj, Action<PointerEventData> callback)
     {
-        if(!obj || callback == null)
+        if (!obj || callback == null)
             return;
         var l = obj.GetComponent<EndDragListener>();
-        if(!l)
+        if (!l)
             l = obj.AddComponent<EndDragListener>();
         l.callbacks.Add(callback);
     }
     public static void RemoveListenerOnEndDrag(GameObject obj, Action<PointerEventData> callback)
     {
-        if(!obj || callback == null)
+        if (!obj || callback == null)
             return;
         var l = obj.GetComponent<EndDragListener>();
-        if(!l)
+        if (!l)
             return;
         l.callbacks.Remove(callback);
     }
     public static void RemoveListenerOnEndDrag(GameObject obj)
     {
-        if(!obj)
+        if (!obj)
             return;
         var l = obj.GetComponent<EndDragListener>();
-        if(!l)
+        if (!l)
             return;
         l.callbacks.Clear();
     }
@@ -544,43 +543,31 @@ public static class GenericUtils
         var md5s = new List<string>();
 
         int start = 0;
-        int count = 0;
 
-        do
+        for (int i = 0; i < data.Length; i++)
         {
-            while (data[start + count] != ':')
+            if (data[i] == ':')
             {
-                count += 1;
-            }
-            md5s.Add(CalcMd5(data, start, count));
 
-            start += count;
-            count = 0;
+                for (int j = i; j > start; j--)
+                {
+                    if (data[j] == '\r' && data[j + 1] == '\n')
+                    {
+                        start = j + 2;
+                        md5s.Add(CalcMd5(data, start, i - start));
+                        break;
+                    }
+                    if (j == start + 1)
+                    {
+                        md5s.Add(CalcMd5(data, start, i - start));
+                    }
+                }
 
-            while (data[start] != '\xd' &&
-                    data[start] != '\xa')
-            {
-                start += 1;
-                if (start >= data.Length)
-                    break;
             }
-            if (start >= data.Length)
+
+            if (start >= data.Length || data[start] == 0)
                 break;
-
-            while (data[start] == '\xd' ||
-                    data[start] == '\xa')
-            {
-                start += 1;
-
-                if (start >= data.Length)
-                    break;
-            }
-
-            if (start >= data.Length)
-                break;
-
-        } while (data[start] != 0);
-
+        }
         return md5s;
     }
 
@@ -591,7 +578,7 @@ public static class GenericUtils
         {
             get
             {
-                if(!instance_)
+                if (!instance_)
                 {
                     var obj = new GameObject();
                     obj.name = "CoroutineHelper";
@@ -676,7 +663,7 @@ public static class GenericUtils
     {
         get
         {
-            if(_text_content == null)
+            if (_text_content == null)
             {
                 _text_content = EmueraContent.instance;
             }

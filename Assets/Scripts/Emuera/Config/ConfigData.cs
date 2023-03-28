@@ -469,9 +469,9 @@ static ConfigData() { }
 				//bool defineIgnoreWarningFiles = false;
 				while ((line = eReader.ReadLine()) != null)
 				{
-					var md5 = md5s[md5i++];
 					if ((line.Length == 0) || (line[0] == ';'))
 						continue;
+					var md5 = md5s[md5i++];
 					pos = new ScriptPosition(eReader.Filename, eReader.LineNo);
 					string[] tokens = line.Split(new char[] { ':' });
 					if (tokens.Length < 2)
